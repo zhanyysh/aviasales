@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Flight } from '../types';
+import Link from 'next/link';
 
 interface Offer {
   id: number;
@@ -25,7 +26,11 @@ export default function FeaturedOffers() {
       <h2 className="text-2xl font-bold mb-4">Special Offers</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {offers.map(offer => (
-          <div key={offer.id} className="bg-white rounded-lg shadow p-6">
+          <Link
+            key={offer.id}
+            href={offer.flight_id ? `/flight/${offer.flight_id}?offerId=${offer.id}` : '#'}
+            className="bg-white rounded-lg shadow p-6 block hover:bg-gray-100 transition"
+          >
             <div className="mb-2 text-lg font-semibold text-indigo-700">{offer.description}</div>
             <div className="mb-2">Discount Price: <span className="font-bold">${offer.discount_price}</span></div>
             {offer.flight && (
@@ -33,7 +38,7 @@ export default function FeaturedOffers() {
                 {offer.flight.departure_city} → {offer.flight.arrival_city} | {offer.flight.departure_time}
               </div>
             )}
-          </div>
+          </Link>
         ))}
       </div>
     </div>

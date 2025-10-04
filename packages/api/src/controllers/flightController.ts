@@ -1,3 +1,41 @@
+// Получить ближайшие вылеты (например, 10 следующих)
+export const getUpcomingFlights = async (req: Request, res: Response) => {
+    try {
+        const db = getDb();
+        const query = `
+            SELECT
+                f.id,
+                f.flight_number,
+                f.departure_time,
+                f.arrival_time,
+                f.base_price,
+                (f.total_seats - COUNT(b.id)) as seats_available,
+                dep_airport.name as departure_airport_name,
+                dep_airport.city as departure_city,
+                dep_airport.iata_code as departure_iata,
+                arr_airport.name as arrival_airport_name,
+                arr_airport.city as arrival_city,
+                arr_airport.iata_code as arrival_iata,
+                airline.name as airline_name,
+                airline.iata_code as airline_iata,
+                f.stops
+            FROM flights f
+            JOIN airports dep_airport ON f.departure_airport_id = dep_airport.id
+            JOIN airports arr_airport ON f.arrival_airport_id = arr_airport.id
+            JOIN airlines airline ON f.airline_id = airline.id
+            LEFT JOIN bookings b ON f.id = b.flight_id AND b.status = 'CONFIRMED'
+            WHERE f.departure_time > NOW()
+            GROUP BY f.id
+            ORDER BY f.departure_time ASC
+            LIMIT 10
+        `;
+        const [rows] = await db.query(query);
+        res.json(rows);
+    } catch (error) {
+        console.error('Error getting upcoming flights:', error);
+        res.status(500).json({ message: 'Failed to get upcoming flights', error: (error as Error).message });
+    }
+};
 import { Request, Response } from 'express';
 import { getDb } from '../db';
 
@@ -27,7 +65,8 @@ export const searchFlights = async (req: Request, res: Response) => {
                 arr_airport.city as arrival_city,
                 arr_airport.iata_code as arrival_iata,
                 airline.name as airline_name,
-                airline.iata_code as airline_iata
+                airline.iata_code as airline_iata,
+                f.stops
             FROM flights f
             JOIN airports dep_airport ON f.departure_airport_id = dep_airport.id
             JOIN airports arr_airport ON f.arrival_airport_id = arr_airport.id
@@ -90,6 +129,7 @@ export const getFlightById = async (req: Request, res: Response) => {
                 arr_airport.iata_code as arrival_iata,
                 airline.name as airline_name,
                 airline.iata_code as airline_iata
+                    , f.stops
             FROM flights f
             JOIN airports dep_airport ON f.departure_airport_id = dep_airport.id
             JOIN airports arr_airport ON f.arrival_airport_id = arr_airport.id

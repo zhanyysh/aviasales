@@ -62,7 +62,7 @@ export default function FlightResults({ flights }: FlightResultsProps) {
                             <div className="border-t border-gray-300 my-1"></div>
                             <p className="text-sm text-gray-500">{flight.flight_number}</p>
                             {/* Количество пересадок */}
-                            <p className="text-sm text-gray-700 mt-2">Stops: {typeof flight.stops !== 'undefined' ? flight.stops : 'N/A'}</p>
+                            <p className="text-sm text-gray-700 mt-2">Stops: {typeof flight.stops === 'number' ? flight.stops : (flight.stops === 0 ? 0 : 'N/A')}</p>
                         </div>
                         <div className="text-right">
                             <p className="text-2xl font-bold">{new Date(flight.arrival_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>

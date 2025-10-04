@@ -1,10 +1,12 @@
+
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import SearchForm from '../components/SearchForm';
 import FlightResults from '../components/FlightResults';
 import BannerSlider from '../components/BannerSlider';
 import FeaturedOffers from '../components/FeaturedOffers';
+import FlightTable from '../components/FlightTable';
 import { Flight } from '../types';
 import Link from 'next/link';
 
@@ -13,6 +15,8 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [searched, setSearched] = useState(false);
+  const [isAuth, setIsAuth] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   const handleSearch = async (params: { from: string; to: string; date: string; minPrice?: string; maxPrice?: string; airline?: string; stops?: string }) => {
     setLoading(true);
@@ -47,8 +51,6 @@ export default function Home() {
     }
   };
 
-  const [isAuth, setIsAuth] = useState(() => typeof window !== 'undefined' && !!localStorage.getItem('token'));
-
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
@@ -56,19 +58,29 @@ export default function Home() {
     window.location.reload();
   };
 
+  // Проверяем авторизацию только на клиенте
+  // и рендерим навигацию только после монтирования
+  useEffect(() => {
+    setIsMounted(true);
+    setIsAuth(!!localStorage.getItem('token'));
+  }, []);
+
   return (
     <main className="flex min-h-screen flex-col items-center p-12 bg-gray-50">
-      <nav className="w-full flex justify-end mb-8">
-        <Link href="/profile" className="mr-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">My Tickets</Link>
-        {isAuth ? (
-          <button onClick={handleLogout} className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Выйти</button>
-        ) : (
-          <>
-            <Link href="/login" className="mr-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">Login</Link>
-            <Link href="/register" className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300">Sign Up</Link>
-          </>
-        )}
-      </nav>
+      {/* Навигация рендерится только после монтирования на клиенте */}
+      {isMounted && (
+        <nav className="w-full flex justify-end mb-8">
+          <Link href="/profile" className="mr-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">My Tickets</Link>
+          {isAuth ? (
+            <button onClick={handleLogout} className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Выйти</button>
+          ) : (
+            <>
+              <Link href="/login" className="mr-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">Login</Link>
+              <Link href="/register" className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300">Sign Up</Link>
+            </>
+          )}
+        </nav>
+      )}
       <BannerSlider />
       <h1 className="text-4xl font-bold mb-8">Find Your Next Flight</h1>
       <SearchForm onSearch={handleSearch} loading={loading} />
@@ -77,6 +89,8 @@ export default function Home() {
       {searched && !loading && !error && (
         <FlightResults flights={flights} />
       )}
+        {/* Таблица вылетов на сегодня */}
+        <FlightTable />
       <FeaturedOffers />
     </main>
   );
