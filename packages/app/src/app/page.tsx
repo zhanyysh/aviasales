@@ -14,24 +14,31 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [searched, setSearched] = useState(false);
 
-  const handleSearch = async (params: { from: string; to: string; date: string }) => {
+  const handleSearch = async (params: { from: string; to: string; date: string; minPrice?: string; maxPrice?: string; airline?: string; stops?: string }) => {
     setLoading(true);
     setError(null);
     setSearched(true);
     try {
-      // NOTE: This proxy is needed for development to avoid CORS issues.
-      // In a real production environment, you would configure your server (e.g., Nginx)
-      // to handle this, or have the API and App on the same domain.
-      const response = await fetch(`/api/flights/search?from=${params.from}&to=${params.to}&date=${params.date}`);
-      
+      const paramsObj = {
+        from: params.from,
+        to: params.to,
+        date: params.date,
+        minPrice: params.minPrice,
+        maxPrice: params.maxPrice,
+        airline: params.airline,
+        stops: params.stops
+      };
+      const query = Object.entries(paramsObj)
+        .filter(([_, v]) => v !== undefined && v !== '')
+        .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v as string)}`)
+        .join('&');
+      const response = await fetch(`/api/flights/search?${query}`);
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Failed to fetch flights');
       }
-      
       const data: Flight[] = await response.json();
       setFlights(data);
-
     } catch (err) {
       setError((err as Error).message);
       setFlights([]);
@@ -40,12 +47,27 @@ export default function Home() {
     }
   };
 
+  const [isAuth, setIsAuth] = useState(() => typeof window !== 'undefined' && !!localStorage.getItem('token'));
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setIsAuth(false);
+    window.location.reload();
+  };
+
   return (
     <main className="flex min-h-screen flex-col items-center p-12 bg-gray-50">
       <nav className="w-full flex justify-end mb-8">
         <Link href="/profile" className="mr-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">My Tickets</Link>
-        <Link href="/login" className="mr-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">Login</Link>
-        <Link href="/register" className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300">Sign Up</Link>
+        {isAuth ? (
+          <button onClick={handleLogout} className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Выйти</button>
+        ) : (
+          <>
+            <Link href="/login" className="mr-4 px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">Login</Link>
+            <Link href="/register" className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300">Sign Up</Link>
+          </>
+        )}
       </nav>
       <BannerSlider />
       <h1 className="text-4xl font-bold mb-8">Find Your Next Flight</h1>

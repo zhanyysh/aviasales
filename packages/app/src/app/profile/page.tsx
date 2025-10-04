@@ -21,12 +21,11 @@ export default function ProfilePage() {
   const [cancelingId, setCancelingId] = useState<number | null>(null);
   const [message, setMessage] = useState<string | null>(null);
 
-  const fetchBookings = () => {
+  useEffect(() => {
     const user = localStorage.getItem('user');
     const token = localStorage.getItem('token');
     if (!user || !token) {
-      setError('Not logged in');
-      setLoading(false);
+      window.location.href = '/login';
       return;
     }
     const { id } = JSON.parse(user);
@@ -42,11 +41,6 @@ export default function ProfilePage() {
         setError('Failed to load bookings');
         setLoading(false);
       });
-  };
-
-  useEffect(() => {
-    fetchBookings();
-    // eslint-disable-next-line
   }, []);
 
   const handleCancel = async (bookingId: number) => {

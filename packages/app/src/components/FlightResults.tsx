@@ -1,5 +1,6 @@
 import { Flight } from '../types';
 import { useState } from 'react';
+import Link from 'next/link';
 
 interface FlightResultsProps {
     flights: Flight[];
@@ -60,6 +61,8 @@ export default function FlightResults({ flights }: FlightResultsProps) {
                             <p className="text-sm text-gray-500">{flight.airline_name}</p>
                             <div className="border-t border-gray-300 my-1"></div>
                             <p className="text-sm text-gray-500">{flight.flight_number}</p>
+                            {/* Количество пересадок */}
+                            <p className="text-sm text-gray-700 mt-2">Stops: {typeof flight.stops !== 'undefined' ? flight.stops : 'N/A'}</p>
                         </div>
                         <div className="text-right">
                             <p className="text-2xl font-bold">{new Date(flight.arrival_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
@@ -68,17 +71,30 @@ export default function FlightResults({ flights }: FlightResultsProps) {
                     </div>
                     <div className="text-center mt-4">
                         <p className="text-xl font-semibold text-indigo-600">${flight.base_price}</p>
-                        <button
-                            className="mt-2 px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:bg-gray-400"
-                            disabled={buyingId === flight.id}
-                            onClick={() => handleBuy(flight)}
-                        >
-                            {buyingId === flight.id ? 'Buying...' : 'Buy'}
-                        </button>
+                        <div className="flex justify-center gap-4 mt-4">
+                            <button
+                                className="px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:bg-gray-400"
+                                disabled={buyingId === flight.id}
+                                onClick={() => {
+                                    if (typeof window !== 'undefined' && !localStorage.getItem('token')) {
+                                        window.location.href = '/login';
+                                        return;
+                                    }
+                                    handleBuy(flight);
+                                }}
+                            >
+                                {buyingId === flight.id ? 'Buying...' : 'Buy'}
+                            </button>
+                            <Link
+                                href={`/flight/${flight.id}`}
+                                className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                            >
+                                Подробнее
+                            </Link>
+                        </div>
                     </div>
                 </div>
             ))}
-            {message && <div className="mt-4 text-center text-green-600 font-semibold">{message}</div>}
         </div>
     );
 }
