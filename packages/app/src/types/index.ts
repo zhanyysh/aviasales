@@ -13,4 +13,5 @@ export interface Flight {
     arrival_iata: string;
     airline_name: string;
     airline_iata: string;
+    stops?: number;
 }

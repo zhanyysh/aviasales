@@ -1,7 +1,9 @@
-import { Router } from 'express';
-import { createBooking, getUserBookings, cancelBooking } from '../controllers/bookingController';
 
+import { Router } from 'express';
+import { createBooking, getUserBookings, cancelBooking, payBooking } from '../controllers/bookingController';
 const router = Router();
+// POST /api/bookings/pay/:bookingId
+router.post('/pay/:bookingId', payBooking);
 
 // POST /api/bookings
 router.post('/', createBooking);

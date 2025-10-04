@@ -12,6 +12,16 @@ interface Booking {
   flight_number: string;
   departure_time: string;
   arrival_time: string;
+  airline_name?: string;
+  airline_iata?: string;
+  departure_city?: string;
+  departure_airport_name?: string;
+  departure_iata?: string;
+  arrival_city?: string;
+  arrival_airport_name?: string;
+  arrival_iata?: string;
+  stops?: number;
+  passenger_details?: { fullName?: string };
 }
 
 export default function ProfilePage() {
@@ -21,12 +31,11 @@ export default function ProfilePage() {
   const [cancelingId, setCancelingId] = useState<number | null>(null);
   const [message, setMessage] = useState<string | null>(null);
 
-  const fetchBookings = () => {
+  useEffect(() => {
     const user = localStorage.getItem('user');
     const token = localStorage.getItem('token');
     if (!user || !token) {
-      setError('Not logged in');
-      setLoading(false);
+      window.location.href = '/login';
       return;
     }
     const { id } = JSON.parse(user);
@@ -42,11 +51,6 @@ export default function ProfilePage() {
         setError('Failed to load bookings');
         setLoading(false);
       });
-  };
-
-  useEffect(() => {
-    fetchBookings();
-    // eslint-disable-next-line
   }, []);
 
   const handleCancel = async (bookingId: number) => {
@@ -61,7 +65,16 @@ export default function ProfilePage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Cancel failed');
       setMessage(`Booking status updated: ${data.status}`);
-      fetchBookings();
+        // Update ticket list after cancel
+        const user = localStorage.getItem('user');
+        if (user && token) {
+          const { id } = JSON.parse(user);
+          fetch(`/api/bookings/user/${id}`, {
+            headers: { Authorization: `Bearer ${token}` }
+          })
+            .then(res => res.json())
+            .then(data => setBookings(data));
+        }
     } catch (err) {
       setMessage((err as Error).message);
     } finally {
@@ -85,10 +98,46 @@ export default function ProfilePage() {
       <div className="w-full max-w-2xl">
         {bookings.map(b => (
           <div key={b.id} className="bg-white shadow rounded p-4 mb-4">
-            <div className="flex justify-between">
-              <span className="font-bold">Confirmation:</span>
-              <span>{b.confirmation_id}</span>
-            </div>
+            {b.status === 'CONFIRMED' && (
+              <div className="flex justify-between">
+                <span className="font-bold">Confirmation:</span>
+                <span>{b.confirmation_id}</span>
+              </div>
+            )}
+            {b.status === 'NOT_PAID' && (
+              <div className="flex justify-end mt-2">
+                <button
+                  className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 disabled:bg-gray-400"
+                  onClick={async () => {
+                    const token = localStorage.getItem('token');
+                    setMessage(null);
+                    try {
+                      const res = await fetch(`/api/bookings/pay/${b.id}`, {
+                        method: 'POST',
+                        headers: { Authorization: `Bearer ${token}` }
+                      });
+                      const data = await res.json();
+                      if (!res.ok) throw new Error(data.message || 'Payment failed');
+                      setMessage(`Payment successful! Confirmation: ${data.confirmation_id}`);
+                      // Обновить список билетов
+                      const user = localStorage.getItem('user');
+                      if (user && token) {
+                        const { id } = JSON.parse(user);
+                        fetch(`/api/bookings/user/${id}`, {
+                          headers: { Authorization: `Bearer ${token}` }
+                        })
+                          .then(res => res.json())
+                          .then(data => setBookings(data));
+                      }
+                    } catch (err) {
+                      setMessage((err as Error).message);
+                    }
+                  }}
+                >
+                  Pay
+                </button>
+              </div>
+            )}
             <div className="flex justify-between">
               <span>Status:</span>
               <span>{b.status}</span>
@@ -96,6 +145,14 @@ export default function ProfilePage() {
             <div className="flex justify-between">
               <span>Flight:</span>
               <span>{b.flight_number}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Airline:</span>
+              <span>{b.airline_name} {b.airline_iata ? `(${b.airline_iata})` : ''}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Route:</span>
+              <span>{b.departure_city} ({b.departure_airport_name}, {b.departure_iata}) → {b.arrival_city} ({b.arrival_airport_name}, {b.arrival_iata})</span>
             </div>
             <div className="flex justify-between">
               <span>Departure:</span>
@@ -106,6 +163,14 @@ export default function ProfilePage() {
               <span>{new Date(b.arrival_time).toLocaleString()}</span>
             </div>
             <div className="flex justify-between">
+              <span>Stops:</span>
+              <span>{typeof b.stops !== 'undefined' ? b.stops : 'N/A'}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Passengers:</span>
+              <span>{Array.isArray(b.passenger_details) ? b.passenger_details.length : (b.passenger_details ? 1 : 'N/A')}</span>
+            </div>
+            <div className="flex justify-between">
               <span>Price:</span>
               <span>${b.total_price}</span>
             </div>
@@ -114,6 +179,7 @@ export default function ProfilePage() {
               <span>{new Date(b.created_at).toLocaleString()}</span>
             </div>
             <div className="flex justify-end mt-2">
+              <a href={`/flight/${b.flight_id}`} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 mr-2">Details</a>
               {b.status === 'CONFIRMED' && (
                 <button
                   className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 disabled:bg-gray-400"

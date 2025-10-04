@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 interface SearchFormProps {
-    onSearch: (params: { from: string; to: string; date: string }) => void;
+    onSearch: (params: { from: string; to: string; date: string; minPrice?: string; maxPrice?: string; airline?: string; stops?: string }) => void;
     loading: boolean;
 }
 
@@ -11,10 +11,14 @@ export default function SearchForm({ onSearch, loading }: SearchFormProps) {
     const [from, setFrom] = useState('New York');
     const [to, setTo] = useState('Los Angeles');
     const [date, setDate] = useState('2025-11-15');
+    const [minPrice, setMinPrice] = useState('');
+    const [maxPrice, setMaxPrice] = useState('');
+    const [airline, setAirline] = useState('');
+    const [stops, setStops] = useState('');
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        onSearch({ from, to, date });
+        onSearch({ from, to, date, minPrice, maxPrice, airline, stops });
     };
 
     return (
@@ -51,6 +55,55 @@ export default function SearchForm({ onSearch, loading }: SearchFormProps) {
                         onChange={(e) => setDate(e.target.value)}
                         className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     />
+                </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
+                <div>
+                    <label htmlFor="minPrice" className="block text-sm font-medium text-gray-700">Min Price</label>
+                    <input
+                        type="number"
+                        id="minPrice"
+                        value={minPrice}
+                        onChange={(e) => setMinPrice(e.target.value)}
+                        className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        placeholder="0"
+                    />
+                </div>
+                <div>
+                    <label htmlFor="maxPrice" className="block text-sm font-medium text-gray-700">Max Price</label>
+                    <input
+                        type="number"
+                        id="maxPrice"
+                        value={maxPrice}
+                        onChange={(e) => setMaxPrice(e.target.value)}
+                        className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        placeholder="1000"
+                    />
+                </div>
+                <div>
+                    <label htmlFor="airline" className="block text-sm font-medium text-gray-700">Airline</label>
+                    <input
+                        type="text"
+                        id="airline"
+                        value={airline}
+                        onChange={(e) => setAirline(e.target.value)}
+                        className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        placeholder="Aeroflot"
+                    />
+                </div>
+                <div>
+                    <label htmlFor="stops" className="block text-sm font-medium text-gray-700">Stops</label>
+                    <select
+                        id="stops"
+                        value={stops}
+                        onChange={(e) => setStops(e.target.value)}
+                        className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    >
+                        <option value="">Any</option>
+                        <option value="0">Direct</option>
+                        <option value="1">1 Stop</option>
+                        <option value="2">2+ Stops</option>
+                    </select>
                 </div>
             </div>
             <div className="mt-6 text-center">
