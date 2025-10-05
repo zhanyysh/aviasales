@@ -24,10 +24,9 @@ export const getUpcomingFlights = async (req: Request, res: Response) => {
             JOIN airports arr_airport ON f.arrival_airport_id = arr_airport.id
             JOIN airlines airline ON f.airline_id = airline.id
             LEFT JOIN bookings b ON f.id = b.flight_id AND b.status = 'CONFIRMED'
-            WHERE f.departure_time > NOW()
+            WHERE f.departure_time > NOW() AND f.departure_time < DATE_ADD(NOW(), INTERVAL 7 DAY) AND airline.is_active = 1
             GROUP BY f.id
             ORDER BY f.departure_time ASC
-            LIMIT 10
         `;
         const [rows] = await db.query(query);
         res.json(rows);
@@ -72,7 +71,7 @@ export const searchFlights = async (req: Request, res: Response) => {
             JOIN airports arr_airport ON f.arrival_airport_id = arr_airport.id
             JOIN airlines airline ON f.airline_id = airline.id
             LEFT JOIN bookings b ON f.id = b.flight_id AND b.status = 'CONFIRMED'
-            WHERE dep_airport.city = ? AND arr_airport.city = ? AND DATE(f.departure_time) = ?
+            WHERE dep_airport.city = ? AND arr_airport.city = ? AND DATE(f.departure_time) = ? AND airline.is_active = 1
         `;
         const params: any[] = [from, to, date];
         if (minPrice) {
@@ -135,7 +134,7 @@ export const getFlightById = async (req: Request, res: Response) => {
             JOIN airports arr_airport ON f.arrival_airport_id = arr_airport.id
             JOIN airlines airline ON f.airline_id = airline.id
             LEFT JOIN bookings b ON f.id = b.flight_id AND b.status = 'CONFIRMED'
-            WHERE f.id = ?
+            WHERE f.id = ? AND airline.is_active = 1
             GROUP BY f.id
         `;
         const [rows]: any = await db.query(query, [id]);

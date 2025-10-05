@@ -7,6 +7,7 @@ interface Offer {
   flight_id: number;
   discount_price: string;
   description: string;
+  title?: string;
   flight: Flight | null;
 }
 
@@ -16,13 +17,13 @@ export default function FeaturedOffers() {
   useEffect(() => {
     fetch('/api/featured_offers')
       .then(res => res.json())
-      .then(data => setOffers(data));
+      .then(data => setOffers(Array.isArray(data) ? data.filter((o: any) => o.is_active === 1) : []));
   }, []);
 
   if (offers.length === 0) return null;
 
   return (
-    <div className="w-full max-w-4xl mx-auto mb-8">
+  <div className="w-full max-w-5xl mx-auto mb-8">
       <h2 className="text-2xl font-bold mb-4">Special Offers</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {offers.map(offer => (
@@ -31,6 +32,9 @@ export default function FeaturedOffers() {
             href={offer.flight_id ? `/flight/${offer.flight_id}?offerId=${offer.id}` : '#'}
             className="bg-white rounded-lg shadow p-6 block hover:bg-gray-100 transition"
           >
+            {offer.title && (
+              <div className="mb-2 text-xl font-bold text-orange-700">{offer.title}</div>
+            )}
             <div className="mb-2 text-lg font-semibold text-indigo-700">{offer.description}</div>
             <div className="mb-2">Discount Price: <span className="font-bold">${offer.discount_price}</span></div>
             {offer.flight && (

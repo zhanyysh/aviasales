@@ -39,6 +39,9 @@ export const login = async (req: Request, res: Response) => {
             return res.status(401).json({ message: 'Invalid credentials.' });
         }
         const user = (users as any[])[0];
+        if (user.is_blocked) {
+            return res.status(403).json({ message: 'Your account is blocked. Access denied.' });
+        }
         const valid = await bcrypt.compare(password, user.password_hash);
         if (!valid) {
             return res.status(401).json({ message: 'Invalid credentials.' });

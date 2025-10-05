@@ -66,8 +66,9 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-12 bg-gray-50">
+  <main className="flex min-h-screen flex-col items-center p-12 bg-white max-w-5xl mx-auto">
       <BannerSlider />
+      <FeaturedOffers />
       <h1 className="text-4xl font-bold mb-8">Find Your Next Flight</h1>
       <SearchForm onSearch={handleSearch} loading={loading} />
       {loading && <p>Loading...</p>}
@@ -77,7 +78,6 @@ export default function Home() {
       )}
         {/* Таблица вылетов на сегодня */}
         <FlightTable />
-      <FeaturedOffers />
     </main>
   );
 }

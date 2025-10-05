@@ -80,7 +80,7 @@ export const getUserBookings = async (req: Request, res: Response) => {
              JOIN airports dep_airport ON f.departure_airport_id = dep_airport.id
              JOIN airports arr_airport ON f.arrival_airport_id = arr_airport.id
              JOIN airlines airline ON f.airline_id = airline.id
-             WHERE b.user_id = ? ORDER BY b.created_at DESC`,
+             WHERE b.user_id = ? AND airline.is_active = 1 ORDER BY b.created_at DESC`,
             [userId]
         );
         // Парсим passenger_details для каждого бронирования

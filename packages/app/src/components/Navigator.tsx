@@ -20,6 +20,12 @@ export default function Navigator() {
           {user && (
             <>
               <Link href="/profile" className="px-4 py-2 rounded bg-indigo-100 text-indigo-700 hover:bg-indigo-200 transition">Мои билеты</Link>
+              {user.role && user.role.toUpperCase() === 'ADMIN' && (
+                <Link href="/admin" className="px-4 py-2 rounded bg-indigo-100 text-indigo-700 hover:bg-indigo-200 transition">Админ-панель</Link>
+              )}
+              {user.role && user.role.toUpperCase() === 'MANAGER' && (
+                <Link href="/manager" className="px-4 py-2 rounded bg-indigo-100 text-indigo-700 hover:bg-indigo-200 transition">Менеджер-панель</Link>
+              )}
               <button onClick={logout} className="px-4 py-2 rounded bg-red-100 text-red-700 hover:bg-red-200 transition">Выйти</button>
             </>
           )}

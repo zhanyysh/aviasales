@@ -4,7 +4,8 @@ interface Banner {
   id: number;
   title: string;
   image_url: string;
-  link_url: string;
+  airline_id: number;
+  is_active: number;
 }
 
 export default function BannerSlider() {
@@ -21,8 +22,9 @@ export default function BannerSlider() {
         return res.json();
       })
       .then(data => {
-        console.log('Полученные баннеры:', data);
-        setBanners(data);
+        // Показываем только активные баннеры
+        const activeBanners = Array.isArray(data) ? data.filter(b => b.is_active === 1) : [];
+        setBanners(activeBanners);
       })
       .catch(err => {
         console.error('Ошибка запроса баннеров:', err);
@@ -43,10 +45,18 @@ export default function BannerSlider() {
   const banner = banners[current];
 
   return (
-    <div className="w-full max-w-3xl mx-auto mb-8">
-      <a href={banner.link_url} target="_blank" rel="noopener noreferrer">
-        <div className="relative rounded-lg overflow-hidden shadow-lg">
-          <img src={banner.image_url} alt={banner.title} className="w-full h-48 object-cover" />
+  <div className="w-full max-w-5xl mx-auto mb-8">
+      <a href={`/airline/${banner.airline_id}`}>
+        <div className="relative rounded-lg overflow-hidden shadow-lg cursor-pointer">
+          <img
+            src={
+              banner.image_url.startsWith('/banners/')
+                ? `http://localhost:3001${banner.image_url}`
+                : banner.image_url
+            }
+            alt={banner.title}
+            className="w-full h-64 object-cover"
+          />
           <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-4">
             <h2 className="text-xl font-bold">{banner.title}</h2>
           </div>
