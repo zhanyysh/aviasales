@@ -1,5 +1,6 @@
 {
+  "/admin/content/page": "app/admin/content/page.js",
   "/flight/[id]/page": "app/flight/[id]/page.js",
-  "/profile/page": "app/profile/page.js",
-  "/page": "app/page.js"
+  "/page": "app/page.js",
+  "/airline/[id]/page": "app/airline/[id]/page.js"
 }

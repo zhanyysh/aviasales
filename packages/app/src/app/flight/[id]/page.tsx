@@ -81,36 +81,49 @@ export default function FlightDetailPage({ params }: { params: { id: string } })
   };
 
   return (
-    <main className="max-w-2xl mx-auto p-8 bg-white rounded shadow">
-      <h1 className="text-2xl font-bold mb-4">Flight Details</h1>
-      <div className="mb-2"><b>Flight Number:</b> {flight.flight_number}</div>
-      <div className="mb-2"><b>Airline:</b> {flight.airline_name} ({flight.airline_iata})</div>
-      <div className="mb-2"><b>From:</b> {flight.departure_city} ({flight.departure_airport_name}, {flight.departure_iata})</div>
-      <div className="mb-2"><b>To:</b> {flight.arrival_city} ({flight.arrival_airport_name}, {flight.arrival_iata})</div>
-      <div className="mb-2"><b>Departure:</b> {new Date(flight.departure_time).toLocaleString()}</div>
-      <div className="mb-2"><b>Arrival:</b> {new Date(flight.arrival_time).toLocaleString()}</div>
-      <div className="mb-2"><b>Duration:</b> {duration}</div>
-      <div className="mb-2"><b>Stops:</b> {typeof flight.stops !== 'undefined' ? flight.stops : 'N/A'}</div>
-      <div className="mb-2"><b>Available Seats:</b> {flight.seats_available}</div>
-      <div className="mb-2">
-        <b>Price:</b>
-        {offer && offer.discount_price ? (
-          <>
-            <span style={{ textDecoration: 'line-through', color: '#888', marginRight: 8 }}>${flight.base_price}</span>
-            <span style={{ color: '#d97706', fontWeight: 'bold' }}>${offer.discount_price}</span>
-          </>
-        ) : (
-          <> ${flight.base_price}</>
-        )}
+    <main className="max-w-2xl mx-auto p-8 bg-white rounded-xl shadow-lg">
+      <h1 className="text-3xl font-bold mb-8 text-center">Flight Details</h1>
+      <div className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm mb-6">
+        <div className="font-medium text-gray-600">Flight Number:</div>
+        <div className="font-semibold text-gray-900">{flight.flight_number}</div>
+        <div className="font-medium text-gray-600">Airline:</div>
+        <div className="font-semibold text-gray-900">{flight.airline_name} {flight.airline_iata ? `(${flight.airline_iata})` : ''}</div>
+        <div className="font-medium text-gray-600">From:</div>
+        <div className="font-semibold text-gray-900">{flight.departure_city} ({flight.departure_airport_name}, {flight.departure_iata})</div>
+        <div className="font-medium text-gray-600">To:</div>
+        <div className="font-semibold text-gray-900">{flight.arrival_city} ({flight.arrival_airport_name}, {flight.arrival_iata})</div>
+        <div className="font-medium text-gray-600">Departure:</div>
+        <div className="font-semibold text-gray-900">{new Date(flight.departure_time).toLocaleString()}</div>
+        <div className="font-medium text-gray-600">Arrival:</div>
+        <div className="font-semibold text-gray-900">{new Date(flight.arrival_time).toLocaleString()}</div>
+        <div className="font-medium text-gray-600">Duration:</div>
+        <div className="font-semibold text-gray-900">{duration}</div>
+        <div className="font-medium text-gray-600">Stops:</div>
+        <div className="font-semibold text-gray-900">{typeof flight.stops !== 'undefined' ? flight.stops : 'N/A'}</div>
+        <div className="font-medium text-gray-600">Available Seats:</div>
+        <div className="font-semibold text-gray-900">{flight.seats_available}</div>
+        <div className="font-medium text-gray-600">Price:</div>
+        <div className="font-semibold text-indigo-700">
+          {offer && offer.discount_price ? (
+            <>
+              <span className="line-through text-gray-400 mr-2">${flight.base_price}</span>
+              <span className="text-orange-600 font-bold">${offer.discount_price}</span>
+            </>
+          ) : (
+            <>${flight.base_price}</>
+          )}
+        </div>
       </div>
-      <button
-        className="mt-4 px-6 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:bg-gray-400"
-        disabled={buying}
-        onClick={handleBuy}
-      >
-        {buying ? 'Buying...' : 'Buy Ticket'}
-      </button>
-      {message && <div className="mt-4 text-center text-indigo-700 font-semibold">{message}</div>}
+      <div className="flex justify-center mt-6">
+        <button
+          className="px-6 py-2 bg-blue-600 text-white rounded-lg font-semibold shadow hover:bg-blue-700 disabled:bg-gray-400"
+          disabled={buying}
+          onClick={handleBuy}
+        >
+          {buying ? 'Buying...' : 'Buy Ticket'}
+        </button>
+      </div>
+      {message && <div className="mt-6 text-center text-indigo-700 font-semibold">{message}</div>}
     </main>
   );
 }

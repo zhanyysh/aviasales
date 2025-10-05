@@ -91,23 +91,23 @@ export default function ProfilePage() {
 
   return (
     <main className="flex min-h-screen flex-col items-center p-8 bg-gray-50">
-      <h1 className="text-3xl font-bold mb-6">My Tickets</h1>
+      <h1 className="text-3xl font-bold mb-8 text-center">My Tickets</h1>
       {loading && <p>Loading...</p>}
       {error && <p className="text-red-500">{error}</p>}
       {!loading && bookings.length === 0 && <p>No tickets found.</p>}
-      <div className="w-full max-w-2xl">
+      <div className="w-full max-w-2xl flex flex-col gap-6">
         {bookings.map(b => (
-          <div key={b.id} className="bg-white shadow rounded p-4 mb-4">
-            {b.status === 'CONFIRMED' && (
-              <div className="flex justify-between">
-                <span className="font-bold">Confirmation:</span>
-                <span>{b.confirmation_id}</span>
+          <div key={b.id} className="bg-white shadow-lg rounded-xl p-6 flex flex-col gap-4 border border-gray-100">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <span className={`px-3 py-1 rounded-full text-xs font-semibold ${b.status === 'CONFIRMED' ? 'bg-green-100 text-green-700' : b.status === 'NOT_PAID' ? 'bg-yellow-100 text-yellow-700' : 'bg-gray-200 text-gray-700'}`}>{b.status}</span>
+                {b.status === 'CONFIRMED' && (
+                  <span className="text-xs text-gray-500">Confirmation: <span className="font-bold text-gray-700">{b.confirmation_id}</span></span>
+                )}
               </div>
-            )}
-            {b.status === 'NOT_PAID' && (
-              <div className="flex justify-end mt-2">
+              {b.status === 'NOT_PAID' && (
                 <button
-                  className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 disabled:bg-gray-400"
+                  className="px-4 py-2 bg-yellow-500 text-white rounded-lg font-semibold shadow hover:bg-yellow-600 disabled:bg-gray-400"
                   onClick={async () => {
                     const token = localStorage.getItem('token');
                     setMessage(null);
@@ -119,7 +119,6 @@ export default function ProfilePage() {
                       const data = await res.json();
                       if (!res.ok) throw new Error(data.message || 'Payment failed');
                       setMessage(`Payment successful! Confirmation: ${data.confirmation_id}`);
-                      // Обновить список билетов
                       const user = localStorage.getItem('user');
                       if (user && token) {
                         const { id } = JSON.parse(user);
@@ -136,53 +135,33 @@ export default function ProfilePage() {
                 >
                   Pay
                 </button>
-              </div>
-            )}
-            <div className="flex justify-between">
-              <span>Status:</span>
-              <span>{b.status}</span>
+              )}
             </div>
-            <div className="flex justify-between">
-              <span>Flight:</span>
-              <span>{b.flight_number}</span>
+            <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
+              <div className="font-medium text-gray-600">Flight:</div>
+              <div className="font-semibold text-gray-900">{b.flight_number}</div>
+              <div className="font-medium text-gray-600">Airline:</div>
+              <div className="font-semibold text-gray-900">{b.airline_name} {b.airline_iata ? `(${b.airline_iata})` : ''}</div>
+              <div className="font-medium text-gray-600">Route:</div>
+              <div className="font-semibold text-gray-900">{b.departure_city} ({b.departure_airport_name}, {b.departure_iata}) → {b.arrival_city} ({b.arrival_airport_name}, {b.arrival_iata})</div>
+              <div className="font-medium text-gray-600">Departure:</div>
+              <div className="font-semibold text-gray-900">{new Date(b.departure_time).toLocaleString()}</div>
+              <div className="font-medium text-gray-600">Arrival:</div>
+              <div className="font-semibold text-gray-900">{new Date(b.arrival_time).toLocaleString()}</div>
+              <div className="font-medium text-gray-600">Stops:</div>
+              <div className="font-semibold text-gray-900">{typeof b.stops !== 'undefined' ? b.stops : 'N/A'}</div>
+              <div className="font-medium text-gray-600">Passengers:</div>
+              <div className="font-semibold text-gray-900">{Array.isArray(b.passenger_details) ? b.passenger_details.length : (b.passenger_details ? 1 : 'N/A')}</div>
+              <div className="font-medium text-gray-600">Price:</div>
+              <div className="font-semibold text-indigo-700">${b.total_price}</div>
+              <div className="font-medium text-gray-600">Created:</div>
+              <div className="font-semibold text-gray-900">{new Date(b.created_at).toLocaleString()}</div>
             </div>
-            <div className="flex justify-between">
-              <span>Airline:</span>
-              <span>{b.airline_name} {b.airline_iata ? `(${b.airline_iata})` : ''}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Route:</span>
-              <span>{b.departure_city} ({b.departure_airport_name}, {b.departure_iata}) → {b.arrival_city} ({b.arrival_airport_name}, {b.arrival_iata})</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Departure:</span>
-              <span>{new Date(b.departure_time).toLocaleString()}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Arrival:</span>
-              <span>{new Date(b.arrival_time).toLocaleString()}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Stops:</span>
-              <span>{typeof b.stops !== 'undefined' ? b.stops : 'N/A'}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Passengers:</span>
-              <span>{Array.isArray(b.passenger_details) ? b.passenger_details.length : (b.passenger_details ? 1 : 'N/A')}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Price:</span>
-              <span>${b.total_price}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Created:</span>
-              <span>{new Date(b.created_at).toLocaleString()}</span>
-            </div>
-            <div className="flex justify-end mt-2">
-              <a href={`/flight/${b.flight_id}`} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 mr-2">Details</a>
+            <div className="flex justify-end gap-2 mt-4">
+              <a href={`/flight/${b.flight_id}`} className="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold shadow hover:bg-blue-700">Details</a>
               {b.status === 'CONFIRMED' && (
                 <button
-                  className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 disabled:bg-gray-400"
+                  className="px-4 py-2 bg-red-600 text-white rounded-lg font-semibold shadow hover:bg-red-700 disabled:bg-gray-400"
                   disabled={cancelingId === b.id}
                   onClick={() => handleCancel(b.id)}
                 >

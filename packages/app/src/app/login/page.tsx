@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import AuthContext from '../../context/AuthContext';
 import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
@@ -9,6 +10,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const { setUser } = useContext(AuthContext);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,10 +25,10 @@ export default function LoginPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Login failed');
       // Сохраняем токен в localStorage
-      localStorage.setItem('token', data.token);
-      // Можно сохранить и данные пользователя
-      localStorage.setItem('user', JSON.stringify(data.user));
-      router.push('/');
+  localStorage.setItem('token', data.token);
+  localStorage.setItem('user', JSON.stringify(data.user));
+  setUser(data.user); // обновляем контекст сразу
+  router.push('/');
     } catch (err) {
       setError((err as Error).message);
     } finally {

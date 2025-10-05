@@ -26,42 +26,46 @@ export default function FlightTable() {
   if (flights.length === 0) return <p>Нет вылетов на сегодня.</p>;
 
   return (
-    <div className="w-full max-w-5xl mx-auto mt-8">
-      <h2 className="text-2xl font-bold mb-4">Таблица вылетов на сегодня</h2>
-      <table className="w-full table-auto border-collapse bg-white shadow rounded">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="px-4 py-2">Рейс</th>
-            <th className="px-4 py-2">Авиакомпания</th>
-            <th className="px-4 py-2">Откуда</th>
-            <th className="px-4 py-2">Куда</th>
-            <th className="px-4 py-2">Время вылета</th>
-            <th className="px-4 py-2">Время прилёта</th>
-            <th className="px-4 py-2">Пересадки</th>
-            <th className="px-4 py-2">Места</th>
-            <th className="px-4 py-2">Цена</th>
-            <th className="px-4 py-2">Подробнее</th>
-          </tr>
-        </thead>
-        <tbody>
-          {flights.map(flight => (
-            <tr key={flight.id} className="border-b">
-              <td className="px-4 py-2">{flight.flight_number}</td>
-              <td className="px-4 py-2">{flight.airline_name} {flight.airline_iata ? `(${flight.airline_iata})` : ''}</td>
-              <td className="px-4 py-2">{flight.departure_city} ({flight.departure_iata})</td>
-              <td className="px-4 py-2">{flight.arrival_city} ({flight.arrival_iata})</td>
-              <td className="px-4 py-2">{new Date(flight.departure_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
-              <td className="px-4 py-2">{new Date(flight.arrival_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
-              <td className="px-4 py-2">{typeof flight.stops !== 'undefined' ? flight.stops : 'N/A'}</td>
-              <td className="px-4 py-2">{flight.seats_available}</td>
-              <td className="px-4 py-2">${flight.base_price}</td>
-              <td className="px-4 py-2">
-                <Link href={`/flight/${flight.id}`} className="text-blue-600 hover:underline">Подробнее</Link>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+  <div className="w-full max-w-5xl mx-auto mt-8">
+      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+  <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">Таблица ближайших рейс</h2>
+        <div className="overflow-x-auto">
+          <table className="w-full table-auto border-separate border-spacing-y-2">
+            <thead>
+              <tr className="bg-gray-50">
+                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Рейс</th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Авиакомпания</th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Откуда</th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Куда</th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Вылет</th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Прилёт</th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Пересадки</th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Места</th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Цена</th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Подробнее</th>
+              </tr>
+            </thead>
+            <tbody>
+              {flights.map(f => (
+                <tr key={f.id}>
+                  <td className="px-4 py-2 font-semibold">{f.flight_number}</td>
+                  <td className="px-4 py-2">{f.airline_name}</td>
+                  <td className="px-4 py-2">{f.departure_city} ({f.departure_iata})</td>
+                  <td className="px-4 py-2">{f.arrival_city} ({f.arrival_iata})</td>
+                  <td className="px-4 py-2">{new Date(f.departure_time).toLocaleString()}</td>
+                  <td className="px-4 py-2">{new Date(f.arrival_time).toLocaleString()}</td>
+                  <td className="px-4 py-2">{f.stops}</td>
+                  <td className="px-4 py-2">{f.seats_available}</td>
+                  <td className="px-4 py-2 font-bold text-indigo-600">${(typeof f.base_price === 'number' ? f.base_price : parseFloat(f.base_price)).toFixed(2)}</td>
+                  <td className="px-4 py-2">
+                    <a href={`/flight/${f.id}`} className="px-3 py-1 rounded bg-indigo-100 text-indigo-700 hover:bg-indigo-200 transition">Подробнее</a>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 }
