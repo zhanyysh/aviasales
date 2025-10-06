@@ -183,9 +183,9 @@ export default function AdminContent() {
           body: formData
         });
         fetchBanners();
-        form.title.value = '';
-        form.image.value = '';
-        form.airline_id.value = '';
+  form.title.value = '';
+  (form.image as HTMLInputElement).value = '';
+  form.airline_id.value = '';
       }}>
         <div className="font-bold mb-4 text-lg text-indigo-700">Add Banner</div>
         <label className="block mb-2 text-sm font-medium text-gray-700">Title
