@@ -22,6 +22,7 @@ interface Booking {
   arrival_iata?: string;
   stops?: number;
   passenger_details?: { fullName?: string };
+  flight_id: number;
 }
 
 export default function ProfilePage() {
