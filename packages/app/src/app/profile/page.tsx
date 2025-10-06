@@ -25,12 +25,14 @@ interface Booking {
   flight_id: number;
 }
 
+
 export default function ProfilePage() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [cancelingId, setCancelingId] = useState<number | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [userInfo, setUserInfo] = useState<{ full_name?: string; email?: string } | null>(null);
 
   useEffect(() => {
     const user = localStorage.getItem('user');
@@ -39,7 +41,9 @@ export default function ProfilePage() {
       window.location.href = '/login';
       return;
     }
-    const { id } = JSON.parse(user);
+    const parsedUser = JSON.parse(user);
+  setUserInfo({ full_name: parsedUser.full_name, email: parsedUser.email });
+    const { id } = parsedUser;
     fetch(`/api/bookings/user/${id}`, {
       headers: { Authorization: `Bearer ${token}` }
     })
@@ -92,7 +96,15 @@ export default function ProfilePage() {
 
   return (
     <main className="flex min-h-screen flex-col items-center p-8 bg-gray-50">
-      <h1 className="text-3xl font-bold mb-8 text-center">My Tickets</h1>
+      <h1 className="text-3xl font-bold mb-4 text-center">My Tickets</h1>
+      {userInfo && (
+        <div className="mb-6 text-center">
+          {userInfo.full_name && (
+            <div className="text-lg font-semibold text-gray-700">{userInfo.full_name}</div>
+          )}
+          <div className="text-gray-500">{userInfo.email}</div>
+        </div>
+      )}
       {loading && <p>Loading...</p>}
       {error && <p className="text-red-500">{error}</p>}
       {!loading && bookings.length === 0 && <p>No tickets found.</p>}
