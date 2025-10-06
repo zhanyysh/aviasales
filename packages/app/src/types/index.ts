@@ -15,3 +15,8 @@ export interface Flight {
     airline_iata: string;
     stops?: number;
 }
+
+export interface Booking {
+    flight_id: number;
+    // Добавьте остальные поля Booking, если они используются в проекте
+}
