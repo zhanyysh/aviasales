@@ -4,11 +4,13 @@ import multer from 'multer';
 import path from 'path';
 
 
+import { Request, Response } from 'express';
+
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
+  destination: function (req: Request, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) {
     cb(null, path.join(__dirname, '../../public/banners'));
   },
-  filename: function (req, file, cb) {
+  filename: function (req: Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
     cb(null, uniqueSuffix + '-' + file.originalname);
   }
@@ -18,7 +20,7 @@ const upload = multer({ storage });
 const router = Router();
 
 // Получить все баннеры
-router.get('/', async (req, res) => {
+router.get('/', async (req: Request, res: Response) => {
   try {
     const db = getDb();
     const [rows] = await db.query('SELECT * FROM banners');
@@ -29,7 +31,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', async (req: Request, res: Response) => {
   try {
     const db = getDb();
     const { title, image_url, airline_id } = req.body;
@@ -41,13 +43,14 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-router.post('/', upload.single('image'), async (req, res) => {
+router.post('/', upload.single('image'), async (req: Request, res: Response) => {
   try {
     const db = getDb();
     const { title, airline_id } = req.body;
     let image_url = req.body.image_url;
     if (req.file) {
-      image_url = '/banners/' + req.file.filename;
+      const file = req.file as Express.Multer.File;
+      image_url = '/banners/' + file.filename;
     }
     await db.query('INSERT INTO banners (title, image_url, airline_id, is_active, created_at) VALUES (?, ?, ?, 0, NOW())', [title, image_url, airline_id]);
     res.json({ success: true });
