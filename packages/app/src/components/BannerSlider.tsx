@@ -51,7 +51,7 @@ export default function BannerSlider() {
           <img
             src={
               banner.image_url.startsWith('/banners/')
-                ? `http://localhost:3001${banner.image_url}`
+                ? `https://aviasales-api-xi.vercel.app${banner.image_url}`
                 : banner.image_url
             }
             alt={banner.title}

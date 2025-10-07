@@ -221,7 +221,7 @@ export default function AdminContent() {
               <td className="px-4 py-2">
                 <img
                   src={b.image_url.startsWith('/banners/')
-                    ? `http://localhost:3001${b.image_url}`
+                    ? `https://aviasales-api-xi.vercel.app${b.image_url}`
                     : b.image_url}
                   alt={b.title}
                   className="h-12"
