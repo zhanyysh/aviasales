@@ -19,14 +19,14 @@ export default function FlightDetailPage({ params }: { params: { id: string } })
       window.location.href = '/login';
       return;
     }
-    fetch(`/api/flights/${params.id}`)
+  fetch(`https://aviasales-api-xi.vercel.app/api/flights/${params.id}`)
       .then(res => res.ok ? res.json() : null)
       .then(data => {
         setFlight(data);
         setLoading(false);
       });
     // Получаем предложение по id рейса
-    fetch(`/api/featured_offers?flight_id=${params.id}`)
+  fetch(`https://aviasales-api-xi.vercel.app/api/featured_offers?flight_id=${params.id}`)
       .then(res => res.ok ? res.json() : null)
       .then(data => {
         if (data && data.discount_price) setOffer({ discount_price: data.discount_price });
@@ -58,7 +58,7 @@ export default function FlightDetailPage({ params }: { params: { id: string } })
     }
     const passenger_details = { fullName: JSON.parse(user).full_name || 'Passenger' };
     try {
-      const res = await fetch('/api/bookings', {
+  const res = await fetch('https://aviasales-api-xi.vercel.app/api/bookings', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

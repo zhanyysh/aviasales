@@ -15,7 +15,7 @@ export default function FeaturedOffers() {
   const [offers, setOffers] = useState<Offer[]>([]);
 
   useEffect(() => {
-    fetch('/api/featured_offers')
+  fetch('https://aviasales-api-xi.vercel.app/api/featured_offers')
       .then(res => res.json())
       .then(data => setOffers(Array.isArray(data) ? data.filter((o: any) => o.is_active === 1) : []));
   }, []);

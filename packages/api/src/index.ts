@@ -1,4 +1,6 @@
 import express from 'express';
+import cors from 'cors';
+import { corsOptions } from './middleware/corsOptions';
 import dotenv from 'dotenv';
 import { initDb } from './db';
 import flightRoutes from './routes/flights';
@@ -19,6 +21,8 @@ initDb();
 
 
 const app = express();
+// CORS должен быть до всех роутов
+app.use(cors(corsOptions));
 const port = process.env.PORT || 3001;
 
 app.use(express.json());

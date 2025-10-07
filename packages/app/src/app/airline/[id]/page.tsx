@@ -20,7 +20,7 @@ export default function AirlinePage() {
 
   useEffect(() => {
     if (!id) return;
-    fetch(`/api/airlines/${id}`)
+  fetch(`https://aviasales-api-xi.vercel.app/api/airlines/${id}`)
       .then(res => res.json())
       .then(data => {
         setAirline(data);
@@ -31,7 +31,7 @@ export default function AirlinePage() {
         setLoading(false);
       });
     // Получить все рейсы этой авиакомпании
-    fetch(`/api/flights/all`)
+  fetch(`https://aviasales-api-xi.vercel.app/api/flights/all`)
       .then(res => res.json())
       .then(data => {
         setFlights(Array.isArray(data) ? data.filter(f => String(f.airline_id) === String(id)) : []);

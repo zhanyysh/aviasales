@@ -13,7 +13,7 @@ export default function BannerSlider() {
   const [current, setCurrent] = useState(0);
 
   useEffect(() => {
-    fetch('/api/banners')
+  fetch('https://aviasales-api-xi.vercel.app/api/banners')
       .then(res => {
         if (!res.ok) {
           console.error('Ошибка загрузки баннеров:', res.status);

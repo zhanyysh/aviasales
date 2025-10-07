@@ -18,7 +18,7 @@ export default function AdminUsers() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    fetch("/api/users", {
+  fetch("https://aviasales-api-xi.vercel.app/api/users", {
       headers: token ? { Authorization: `Bearer ${token}` } : {}
     })
       .then(res => {
@@ -39,13 +39,13 @@ export default function AdminUsers() {
     setActionId(id);
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`/api/users/${id}/${block ? "block" : "unblock"}`, {
+  const res = await fetch(`https://aviasales-api-xi.vercel.app/api/users/${id}/${block ? "block" : "unblock"}`, {
         method: "POST",
         headers: token ? { Authorization: `Bearer ${token}` } : {}
       });
       if (!res.ok) throw new Error('Failed to update user status');
       // После успешного запроса обновляем список пользователей
-      const usersRes = await fetch("/api/users", {
+  const usersRes = await fetch("https://aviasales-api-xi.vercel.app/api/users", {
         headers: token ? { Authorization: `Bearer ${token}` } : {}
       });
       const usersData = await usersRes.json();
@@ -102,11 +102,11 @@ export default function AdminUsers() {
                           setActionId(u.id);
                           try {
                             const token = localStorage.getItem('token');
-                            await fetch(`/api/users/${u.id}/make-manager`, {
+                            await fetch(`https://aviasales-api-xi.vercel.app/api/users/${u.id}/make-manager`, {
                               method: "POST",
                               headers: token ? { Authorization: `Bearer ${token}` } : {}
                             });
-                            const usersRes = await fetch("/api/users", {
+                            const usersRes = await fetch("https://aviasales-api-xi.vercel.app/api/users", {
                               headers: token ? { Authorization: `Bearer ${token}` } : {}
                             });
                             const usersData = await usersRes.json();
@@ -129,7 +129,7 @@ export default function AdminUsers() {
                           setActionId(u.id);
                           try {
                             const token = localStorage.getItem('token');
-                            await fetch(`/api/users/${u.id}/make-user`, {
+                            await fetch(`https://aviasales-api-xi.vercel.app/api/users/${u.id}/make-user`, {
                               method: "POST",
                               headers: token ? { Authorization: `Bearer ${token}` } : {}
                             });

@@ -9,7 +9,7 @@ export default function FlightTable() {
 
   useEffect(() => {
     // Получаем ближайшие вылеты (например, 10 следующих рейсов)
-    fetch('/api/flights/upcoming')
+  fetch('https://aviasales-api-xi.vercel.app/api/flights/upcoming')
       .then(res => res.ok ? res.json() : Promise.reject(res))
       .then(data => {
         setFlights(data);
