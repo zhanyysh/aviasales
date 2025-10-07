@@ -18,7 +18,7 @@ export default function RegisterPage() {
     setError(null);
     setSuccess(false);
     try {
-      const res = await fetch('/api/auth/register', {
+  const res = await fetch('https://aviasales-api-xi.vercel.app/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password, full_name: fullName })

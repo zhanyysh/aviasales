@@ -44,7 +44,7 @@ export default function ProfilePage() {
     const parsedUser = JSON.parse(user);
   setUserInfo({ full_name: parsedUser.full_name, email: parsedUser.email });
     const { id } = parsedUser;
-    fetch(`/api/bookings/user/${id}`, {
+  fetch(`https://aviasales-api-xi.vercel.app/api/bookings/user/${id}`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.json())
@@ -63,7 +63,7 @@ export default function ProfilePage() {
     setMessage(null);
     const token = localStorage.getItem('token');
     try {
-      const res = await fetch(`/api/bookings/cancel/${bookingId}`, {
+  const res = await fetch(`https://aviasales-api-xi.vercel.app/api/bookings/cancel/${bookingId}`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -74,7 +74,7 @@ export default function ProfilePage() {
         const user = localStorage.getItem('user');
         if (user && token) {
           const { id } = JSON.parse(user);
-          fetch(`/api/bookings/user/${id}`, {
+          fetch(`https://aviasales-api-xi.vercel.app/api/bookings/user/${id}`, {
             headers: { Authorization: `Bearer ${token}` }
           })
             .then(res => res.json())
@@ -125,7 +125,7 @@ export default function ProfilePage() {
                     const token = localStorage.getItem('token');
                     setMessage(null);
                     try {
-                      const res = await fetch(`/api/bookings/pay/${b.id}`, {
+                      const res = await fetch(`https://aviasales-api-xi.vercel.app/api/bookings/pay/${b.id}`, {
                         method: 'POST',
                         headers: { Authorization: `Bearer ${token}` }
                       });
@@ -135,7 +135,7 @@ export default function ProfilePage() {
                       const user = localStorage.getItem('user');
                       if (user && token) {
                         const { id } = JSON.parse(user);
-                        fetch(`/api/bookings/user/${id}`, {
+                        fetch(`https://aviasales-api-xi.vercel.app/api/bookings/user/${id}`, {
                           headers: { Authorization: `Bearer ${token}` }
                         })
                           .then(res => res.json())

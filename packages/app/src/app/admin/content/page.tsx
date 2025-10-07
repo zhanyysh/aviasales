@@ -41,7 +41,7 @@ export default function AdminContent() {
 
   const fetchBanners = () => {
     setLoading(true);
-    fetch("/api/banners")
+  fetch("https://aviasales-api-xi.vercel.app/api/banners")
       .then(res => res.json())
       .then(data => {
         setBanners(data);
@@ -54,7 +54,7 @@ export default function AdminContent() {
   };
 
   const fetchOffers = () => {
-    fetch("/api/featured_offers")
+  fetch("https://aviasales-api-xi.vercel.app/api/featured_offers")
       .then(res => res.json())
       .then(data => setOffers(Array.isArray(data) ? data : []));
   };
@@ -62,28 +62,28 @@ export default function AdminContent() {
   useEffect(() => {
     fetchBanners();
     fetchOffers();
-    fetch("/api/airlines")
+  fetch("https://aviasales-api-xi.vercel.app/api/airlines")
       .then(res => res.json())
       .then(data => setAirlines(Array.isArray(data) ? data : []));
-    fetch("/api/flights/all")
+  fetch("https://aviasales-api-xi.vercel.app/api/flights/all")
       .then(res => res.json())
       .then(data => setFlights(Array.isArray(data) ? data.map(f => ({ id: f.id, flight_number: f.flight_number })) : []));
   }, []);
   const handleOfferActivate = async (id: number) => {
     setActionId(id);
-    await fetch(`/api/featured_offers/${id}/activate`, { method: "POST" });
+  await fetch(`https://aviasales-api-xi.vercel.app/api/featured_offers/${id}/activate`, { method: "POST" });
     fetchOffers();
     setActionId(null);
   };
   const handleOfferDeactivate = async (id: number) => {
     setActionId(id);
-    await fetch(`/api/featured_offers/${id}/deactivate`, { method: "POST" });
+  await fetch(`https://aviasales-api-xi.vercel.app/api/featured_offers/${id}/deactivate`, { method: "POST" });
     fetchOffers();
     setActionId(null);
   };
   const handleOfferDelete = async (id: number) => {
     setActionId(id);
-    await fetch(`/api/featured_offers/${id}`, { method: "DELETE" });
+  await fetch(`https://aviasales-api-xi.vercel.app/api/featured_offers/${id}`, { method: "DELETE" });
     fetchOffers();
     setActionId(null);
   };
@@ -106,7 +106,7 @@ export default function AdminContent() {
   const handleOfferEditSave = async () => {
     if (!editOffer) return;
     setActionId(editOffer.id);
-    await fetch(`/api/featured_offers/${editOffer.id}`, {
+  await fetch(`https://aviasales-api-xi.vercel.app/api/featured_offers/${editOffer.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(offerForm)
@@ -118,19 +118,19 @@ export default function AdminContent() {
 
   const handleActivate = async (id: number) => {
     setActionId(id);
-    await fetch(`/api/banners/${id}/activate`, { method: "POST" });
+  await fetch(`https://aviasales-api-xi.vercel.app/api/banners/${id}/activate`, { method: "POST" });
     fetchBanners();
     setActionId(null);
   };
   const handleDeactivate = async (id: number) => {
     setActionId(id);
-    await fetch(`/api/banners/${id}/deactivate`, { method: "POST" });
+  await fetch(`https://aviasales-api-xi.vercel.app/api/banners/${id}/deactivate`, { method: "POST" });
     fetchBanners();
     setActionId(null);
   };
   const handleDelete = async (id: number) => {
     setActionId(id);
-    await fetch(`/api/banners/${id}`, { method: "DELETE" });
+  await fetch(`https://aviasales-api-xi.vercel.app/api/banners/${id}`, { method: "DELETE" });
     fetchBanners();
     setActionId(null);
   };
@@ -148,7 +148,7 @@ export default function AdminContent() {
   const handleEditSave = async () => {
     if (!editBanner) return;
     setActionId(editBanner.id);
-    await fetch(`/api/banners/${editBanner.id}`, {
+  await fetch(`https://aviasales-api-xi.vercel.app/api/banners/${editBanner.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(editForm)
@@ -178,7 +178,7 @@ export default function AdminContent() {
         if (form.image.files[0]) {
           formData.append('image', form.image.files[0]);
         }
-        await fetch('/api/banners', {
+  await fetch('https://aviasales-api-xi.vercel.app/api/banners', {
           method: 'POST',
           body: formData
         });
@@ -255,7 +255,7 @@ export default function AdminContent() {
           flight_id: { value: string };
           discount_price: { value: string };
         };
-        await fetch('/api/featured_offers', {
+  await fetch('https://aviasales-api-xi.vercel.app/api/featured_offers', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

@@ -24,7 +24,7 @@ export default function ManagerPanel() {
   useEffect(() => {
     setLoading(true);
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-    fetch('/api/manager/statistics', {
+  fetch('https://aviasales-api-xi.vercel.app/api/manager/statistics', {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     })
       .then(res => res.json())

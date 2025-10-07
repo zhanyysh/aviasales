@@ -133,7 +133,7 @@ export default function AdminUsers() {
                               method: "POST",
                               headers: token ? { Authorization: `Bearer ${token}` } : {}
                             });
-                            const usersRes = await fetch("/api/users", {
+                            const usersRes = await fetch("https://aviasales-api-xi.vercel.app/api/users", {
                               headers: token ? { Authorization: `Bearer ${token}` } : {}
                             });
                             const usersData = await usersRes.json();

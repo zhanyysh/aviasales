@@ -24,7 +24,7 @@ export default function AdminStatistics() {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`/api/statistics?period=${filter}`)
+  fetch(`https://aviasales-api-xi.vercel.app/api/statistics?period=${filter}`)
       .then(res => res.json())
       .then(data => {
         setStats(data);

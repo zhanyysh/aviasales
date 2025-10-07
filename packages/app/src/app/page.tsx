@@ -36,7 +36,7 @@ export default function Home() {
         .filter(([_, v]) => v !== undefined && v !== '')
         .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v as string)}`)
         .join('&');
-      const response = await fetch(`/api/flights/search?${query}`);
+  const response = await fetch(`https://aviasales-api-xi.vercel.app/api/flights/search?${query}`);
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Failed to fetch flights');
