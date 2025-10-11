@@ -1,6 +1,5 @@
 "use client";
 const API_URL = 'https://aviasales-api-xi.vercel.app';
-"use client";
 import { useEffect, useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 
