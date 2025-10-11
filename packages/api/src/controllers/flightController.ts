@@ -1,3 +1,52 @@
+import jwt from 'jsonwebtoken';
+
+const JWT_SECRET = process.env.JWT_SECRET || 'supersecretkey';
+
+function requireManager(req: Request, res: Response, next: Function) {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) return res.status(401).json({ message: 'No token provided.' });
+    const token = authHeader.split(' ')[1];
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET) as any;
+        if (decoded.role !== 'MANAGER') return res.status(403).json({ message: 'Forbidden: Only managers can add flights.' });
+        next();
+    } catch {
+        return res.status(401).json({ message: 'Invalid token.' });
+    }
+}
+
+export const createFlight = [requireManager, async (req: Request, res: Response) => {
+    const { flight_number, departure_time, arrival_time, base_price, departure_airport_id, arrival_airport_id, total_seats, stops } = req.body;
+    if (!flight_number || !departure_time || !arrival_time || !base_price || !departure_airport_id || !arrival_airport_id || !total_seats) {
+        return res.status(400).json({ message: 'Missing required fields.' });
+    }
+    try {
+        const db = getDb();
+        // Получаем airline_id по user_id менеджера
+        const authHeader = req.headers.authorization;
+        const token = authHeader ? authHeader.split(' ')[1] : null;
+        let managerId = null;
+        if (token) {
+          const decoded = jwt.verify(token, JWT_SECRET) as any;
+          managerId = decoded.id;
+        }
+        if (!managerId) return res.status(403).json({ message: 'Manager id not found in token.' });
+        // Находим airline_id по manager_id
+        const [rows]: any = await db.query('SELECT id, name FROM airlines WHERE manager_id = ?', [managerId]);
+        if (!rows || rows.length === 0) {
+          return res.status(400).json({ message: 'No airline found for this manager.' });
+        }
+        const airline_id = rows[0].id;
+        await db.query(
+            `INSERT INTO flights (flight_number, departure_time, arrival_time, base_price, airline_id, departure_airport_id, arrival_airport_id, total_seats, stops)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [flight_number, departure_time, arrival_time, base_price, airline_id, departure_airport_id, arrival_airport_id, total_seats, stops || 0]
+        );
+        res.status(201).json({ message: 'Flight created successfully.' });
+    } catch (error) {
+        res.status(500).json({ message: 'Failed to create flight', error: (error as Error).message });
+    }
+}];
 // Получить ближайшие вылеты (например, 10 следующих)
 export const getUpcomingFlights = async (req: Request, res: Response) => {
     try {

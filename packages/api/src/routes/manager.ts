@@ -1,7 +1,26 @@
-import { Router } from 'express';
-import { getDb } from '../db';
 
+import { Router } from 'express';
+import jwt from 'jsonwebtoken';
+import { getDb } from '../db';
 const router = Router();
+const JWT_SECRET = process.env.JWT_SECRET || 'supersecretkey';
+
+// Получить авиакомпанию менеджера
+router.get('/airline', async (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) return res.status(401).json({ message: 'No token provided.' });
+  const token = authHeader.split(' ')[1];
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET) as any;
+    if (decoded.role !== 'MANAGER') return res.status(403).json({ message: 'Forbidden' });
+    const db = getDb();
+    const [rows]: any = await db.query('SELECT id, name FROM airlines WHERE manager_id = ?', [decoded.id]);
+    if (!rows || rows.length === 0) return res.status(404).json({ message: 'No airline found for this manager.' });
+    res.json(rows[0]);
+  } catch (e) {
+    res.status(401).json({ message: 'Invalid token.' });
+  }
+});
 
 
 

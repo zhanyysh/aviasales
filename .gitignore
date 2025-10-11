@@ -19,3 +19,45 @@ yarn-error.log*
 .env
 .env.local
 .DS_Store
+
+# VSCode
+.vscode/
+
+# OS
+Thumbs.db
+ehthumbs.db
+Icon?
+Desktop.ini
+
+# npm/yarn/pnpm
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Test/coverage
+coverage/
+
+# Database dumps
+*.sql
+*.sqlite
+*.db
+
+# IDEs
+.idea/
+.history/
+.sublime*
+.project
+.settings/
+.vscode/
+
+# Misc
+*.swp
+*.swo
+*.bak
+*.tmp
+*.log
+node_modules/
+/.next/
+/.turbo/
+out/
+public/banners/
