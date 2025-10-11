@@ -1,4 +1,5 @@
 "use client";
+const API_URL = 'https://aviasales-api-xi.vercel.app';
 import { useEffect, useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 
@@ -22,7 +23,7 @@ export default function ManagerPanel() {
   const [airports, setAirports] = useState<Array<{ id: number; name: string; city: string; iata_code: string }>>([]);
   useEffect(() => {
     const fetchAirports = async () => {
-      const res = await fetch('/api/airports');
+      const res = await fetch(`${API_URL}/api/airports`);
       if (res.ok) {
         const data = await res.json();
         setAirports(data);
@@ -36,7 +37,7 @@ export default function ManagerPanel() {
   useEffect(() => {
     setLoading(true);
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-  fetch('https://aviasales-api-xi.vercel.app/api/manager/statistics', {
+    fetch(`${API_URL}/api/manager/statistics`, {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     })
       .then(res => res.json())
@@ -68,7 +69,7 @@ export default function ManagerPanel() {
       const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
       if (!token) return;
       // Получаем airline менеджера
-      const res = await fetch('/api/manager/airline', {
+      const res = await fetch(`${API_URL}/api/manager/airline`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) {
@@ -90,7 +91,7 @@ export default function ManagerPanel() {
     setCreateFlightSuccess(null);
     try {
       const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-      const response = await fetch('/api/flights', {
+      const response = await fetch(`${API_URL}/api/flights`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
