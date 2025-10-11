@@ -34,17 +34,19 @@ export default function ManagerPanel() {
   const [stats, setStats] = useState<ManagerStats | null>(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
+  // функция для обновления статистики
+  const fetchStats = async () => {
     setLoading(true);
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-    fetch(`${API_URL}/api/manager/statistics`, {
+    const res = await fetch(`${API_URL}/api/manager/statistics`, {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
-    })
-      .then(res => res.json())
-      .then(data => {
-        setStats(data);
-        setLoading(false);
-      });
+    });
+    const data = await res.json();
+    setStats(data);
+    setLoading(false);
+  };
+  useEffect(() => {
+    fetchStats();
   }, []);
 
   // Состояния для формы создания рейса
@@ -64,19 +66,20 @@ export default function ManagerPanel() {
 
   // airline info for manager
   const [airline, setAirline] = useState<{ id: number; name: string } | null>(null);
+  // функция для обновления авиакомпании
+  const fetchAirline = async () => {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    if (!token) return;
+    // Получаем airline менеджера
+    const res = await fetch(`${API_URL}/api/manager/airline`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (res.ok) {
+      const data = await res.json();
+      setAirline(data);
+    }
+  };
   useEffect(() => {
-    const fetchAirline = async () => {
-      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-      if (!token) return;
-      // Получаем airline менеджера
-      const res = await fetch(`${API_URL}/api/manager/airline`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setAirline(data);
-      }
-    };
     fetchAirline();
   }, []);
 
@@ -114,6 +117,8 @@ export default function ManagerPanel() {
         total_seats: '',
         stops: '',
       });
+  // обновить статистику сразу после добавления рейса
+  await fetchStats();
     } catch (err: any) {
       setCreateFlightError(err.message);
     } finally {
