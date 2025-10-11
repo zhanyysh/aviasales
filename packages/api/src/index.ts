@@ -44,6 +44,9 @@ app.use('/api/featured_offers', featuredOffersRoutes);
 app.use('/api/manager', authMiddleware, managerRoutes);
 app.use('/api/statistics', statisticsRoutes);
 app.use('/api/users', usersRoutes);
+
+import airportsRoutes from './routes/airports';
+app.use('/api/airports', airportsRoutes);
 app.use('/api/airlines', airlinesRoutes);
 
 app.listen(port, () => {

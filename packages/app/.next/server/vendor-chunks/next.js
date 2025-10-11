@@ -2081,6 +2081,16 @@ eval("\nmodule.exports = __webpack_require__(/*! ../../module.compiled */ \"(ssr
 
 eval("module.exports = __webpack_require__(/*! ./dist/client/link */ \"(ssr)/../../node_modules/next/dist/client/link.js\")\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKHNzcikvLi4vLi4vbm9kZV9tb2R1bGVzL25leHQvbGluay5qcyIsIm1hcHBpbmdzIjoiQUFBQSxtSEFBOEMiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly9hcHAvLi4vLi4vbm9kZV9tb2R1bGVzL25leHQvbGluay5qcz85YzZiIl0sInNvdXJjZXNDb250ZW50IjpbIm1vZHVsZS5leHBvcnRzID0gcmVxdWlyZSgnLi9kaXN0L2NsaWVudC9saW5rJylcbiJdLCJuYW1lcyI6W10sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///(ssr)/../../node_modules/next/link.js\n");
 
+/***/ }),
+
+/***/ "(ssr)/../../node_modules/next/navigation.js":
+/*!*********************************************!*\
+  !*** ../../node_modules/next/navigation.js ***!
+  \*********************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+eval("module.exports = __webpack_require__(/*! ./dist/client/components/navigation */ \"(ssr)/../../node_modules/next/dist/client/components/navigation.js\")\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKHNzcikvLi4vLi4vbm9kZV9tb2R1bGVzL25leHQvbmF2aWdhdGlvbi5qcyIsIm1hcHBpbmdzIjoiQUFBQSxxSkFBK0QiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly9hcHAvLi4vLi4vbm9kZV9tb2R1bGVzL25leHQvbmF2aWdhdGlvbi5qcz9hNDU5Il0sInNvdXJjZXNDb250ZW50IjpbIm1vZHVsZS5leHBvcnRzID0gcmVxdWlyZSgnLi9kaXN0L2NsaWVudC9jb21wb25lbnRzL25hdmlnYXRpb24nKVxuIl0sIm5hbWVzIjpbXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///(ssr)/../../node_modules/next/navigation.js\n");
+
 /***/ })
 
 };

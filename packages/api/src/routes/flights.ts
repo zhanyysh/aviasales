@@ -37,7 +37,9 @@ router.get('/all', async (req, res) => {
 	}
 });
 
-import { searchFlights, getFlightById, getUpcomingFlights } from '../controllers/flightController';
+import { searchFlights, getFlightById, getUpcomingFlights, createFlight } from '../controllers/flightController';
+// POST /api/flights (только для менеджеров)
+router.post('/', createFlight);
 
 // GET /api/flights/search?from=JFK&to=LAX&date=2025-11-15
 router.get('/search', searchFlights);
