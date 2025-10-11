@@ -132,24 +132,32 @@ export default function ManagerPanel() {
         )}
         <form className="grid grid-cols-1 md:grid-cols-2 gap-4" onSubmit={handleCreateFlight}>
           <input name="flight_number" value={flightForm.flight_number} onChange={handleFlightFormChange} className="border p-2 rounded" placeholder="Flight Number" required />
-          <input
-            name="departure_time"
-            value={flightForm.departure_time}
-            onChange={handleFlightFormChange}
-            className="border p-2 rounded"
-            type="datetime-local"
-            placeholder="Departure date and time"
-            required
-          />
-          <input
-            name="arrival_time"
-            value={flightForm.arrival_time}
-            onChange={handleFlightFormChange}
-            className="border p-2 rounded"
-            type="datetime-local"
-            placeholder="Arrival date and time"
-            required
-          />
+          <div className="flex flex-col">
+            <label htmlFor="departure_time" className="text-sm text-gray-600 mb-1">Departure date and time</label>
+            <input
+              id="departure_time"
+              name="departure_time"
+              value={flightForm.departure_time}
+              onChange={handleFlightFormChange}
+              className="border p-2 rounded"
+              type="datetime-local"
+              placeholder="Departure date and time"
+              required
+            />
+          </div>
+          <div className="flex flex-col">
+            <label htmlFor="arrival_time" className="text-sm text-gray-600 mb-1">Arrival date and time</label>
+            <input
+              id="arrival_time"
+              name="arrival_time"
+              value={flightForm.arrival_time}
+              onChange={handleFlightFormChange}
+              className="border p-2 rounded"
+              type="datetime-local"
+              placeholder="Arrival date and time"
+              required
+            />
+          </div>
           <input name="base_price" value={flightForm.base_price} onChange={handleFlightFormChange} className="border p-2 rounded" placeholder="Base Price" required />
           <select
             name="departure_airport_id"
