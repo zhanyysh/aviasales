@@ -3,6 +3,9 @@
 import { useEffect, useState } from 'react';
 import { Flight } from '../../types';
 
+
+const BASE_URL = "http://localhost:3001/api/";
+
 interface Booking {
   id: number;
   confirmation_id: string;
@@ -42,9 +45,9 @@ export default function ProfilePage() {
       return;
     }
     const parsedUser = JSON.parse(user);
-  setUserInfo({ full_name: parsedUser.full_name, email: parsedUser.email });
+    setUserInfo({ full_name: parsedUser.full_name, email: parsedUser.email });
     const { id } = parsedUser;
-  fetch(`https://aviasales-api-xi.vercel.app/api/bookings/user/${id}`, {
+    fetch(`${BASE_URL}bookings/user/${id}`, {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(res => res.json())
@@ -63,23 +66,23 @@ export default function ProfilePage() {
     setMessage(null);
     const token = localStorage.getItem('token');
     try {
-  const res = await fetch(`https://aviasales-api-xi.vercel.app/api/bookings/cancel/${bookingId}`, {
+      const res = await fetch(`${BASE_URL}bookings/cancel/${bookingId}`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Cancel failed');
       setMessage(`Booking status updated: ${data.status}`);
-        // Update ticket list after cancel
-        const user = localStorage.getItem('user');
-        if (user && token) {
-          const { id } = JSON.parse(user);
-          fetch(`https://aviasales-api-xi.vercel.app/api/bookings/user/${id}`, {
-            headers: { Authorization: `Bearer ${token}` }
-          })
-            .then(res => res.json())
-            .then(data => setBookings(data));
-        }
+      // Update ticket list after cancel
+      const user = localStorage.getItem('user');
+      if (user && token) {
+        const { id } = JSON.parse(user);
+        fetch(`${BASE_URL}bookings/user/${id}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+          .then(res => res.json())
+          .then(data => setBookings(data));
+      }
     } catch (err) {
       setMessage((err as Error).message);
     } finally {
@@ -125,7 +128,7 @@ export default function ProfilePage() {
                     const token = localStorage.getItem('token');
                     setMessage(null);
                     try {
-                      const res = await fetch(`https://aviasales-api-xi.vercel.app/api/bookings/pay/${b.id}`, {
+                      const res = await fetch(`${BASE_URL}bookings/pay/${b.id}`, {
                         method: 'POST',
                         headers: { Authorization: `Bearer ${token}` }
                       });
@@ -135,7 +138,7 @@ export default function ProfilePage() {
                       const user = localStorage.getItem('user');
                       if (user && token) {
                         const { id } = JSON.parse(user);
-                        fetch(`https://aviasales-api-xi.vercel.app/api/bookings/user/${id}`, {
+                        fetch(`${BASE_URL}bookings/user/${id}`, {
                           headers: { Authorization: `Bearer ${token}` }
                         })
                           .then(res => res.json())

@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+const BASE_URL = "http://localhost:3001/api/";
+
 interface Stats {
   totalFlights: number;
   activeFlights: number;
@@ -24,7 +26,7 @@ export default function AdminStatistics() {
 
   useEffect(() => {
     setLoading(true);
-  fetch(`https://aviasales-api-xi.vercel.app/api/statistics?period=${filter}`)
+    fetch(`${BASE_URL}statistics?period=${filter}`)
       .then(res => res.json())
       .then(data => {
         setStats(data);

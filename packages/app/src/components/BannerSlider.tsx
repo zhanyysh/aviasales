@@ -13,7 +13,7 @@ export default function BannerSlider() {
   const [current, setCurrent] = useState(0);
 
   useEffect(() => {
-  fetch('https://aviasales-api-xi.vercel.app/api/banners')
+    fetch('http://localhost:3001/api/banners')
       .then(res => {
         if (!res.ok) {
           console.error('Ошибка загрузки баннеров:', res.status);
@@ -45,13 +45,13 @@ export default function BannerSlider() {
   const banner = banners[current];
 
   return (
-  <div className="w-full max-w-5xl mx-auto mb-8">
+    <div className="w-full max-w-5xl mx-auto mb-8">
       <a href={`/airline/${banner.airline_id}`}>
         <div className="relative rounded-lg overflow-hidden shadow-lg cursor-pointer">
           <img
             src={
               banner.image_url.startsWith('/banners/')
-                ? `https://aviasales-api-xi.vercel.app${banner.image_url}`
+                ? `http://localhost:3001${banner.image_url}`
                 : banner.image_url
             }
             alt={banner.title}

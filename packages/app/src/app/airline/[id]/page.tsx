@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
+const BASE_URL = "http://localhost:3000/api/";
+
 interface Airline {
   id: number;
   name: string;
@@ -20,7 +22,7 @@ export default function AirlinePage() {
 
   useEffect(() => {
     if (!id) return;
-  fetch(`https://aviasales-api-xi.vercel.app/api/airlines/${id}`)
+    fetch(`${BASE_URL}airlines/${id}`)
       .then(res => res.json())
       .then(data => {
         setAirline(data);
@@ -31,7 +33,7 @@ export default function AirlinePage() {
         setLoading(false);
       });
     // Получить все рейсы этой авиакомпании
-  fetch(`https://aviasales-api-xi.vercel.app/api/flights/all`)
+    fetch(`${BASE_URL}flights/all`)
       .then(res => res.json())
       .then(data => {
         setFlights(Array.isArray(data) ? data.filter(f => String(f.airline_id) === String(id)) : []);

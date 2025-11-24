@@ -36,7 +36,7 @@ export default function Home() {
         .filter(([_, v]) => v !== undefined && v !== '')
         .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v as string)}`)
         .join('&');
-  const response = await fetch(`https://aviasales-api-xi.vercel.app/api/flights/search?${query}`);
+      const response = await fetch(`http://localhost:3001/api/flights/search?${query}`);
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Failed to fetch flights');
@@ -66,7 +66,7 @@ export default function Home() {
   }, []);
 
   return (
-  <main className="flex min-h-screen flex-col items-center p-12 bg-white max-w-5xl mx-auto">
+    <main className="flex min-h-screen flex-col items-center p-12 bg-white max-w-5xl mx-auto">
       <BannerSlider />
       <FeaturedOffers />
       <h1 className="text-4xl font-bold mb-8">Find Your Next Flight</h1>
@@ -76,8 +76,8 @@ export default function Home() {
       {searched && !loading && !error && (
         <FlightResults flights={flights} />
       )}
-        {/* Таблица вылетов на сегодня */}
-        <FlightTable />
+      {/* Таблица вылетов на сегодня */}
+      <FlightTable />
     </main>
   );
 }

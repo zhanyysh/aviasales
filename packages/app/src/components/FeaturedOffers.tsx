@@ -15,7 +15,7 @@ export default function FeaturedOffers() {
   const [offers, setOffers] = useState<Offer[]>([]);
 
   useEffect(() => {
-  fetch('https://aviasales-api-xi.vercel.app/api/featured_offers')
+    fetch('http://localhost:3001/api/featured_offers')
       .then(res => res.json())
       .then(data => setOffers(Array.isArray(data) ? data.filter((o: any) => o.is_active === 1) : []));
   }, []);
@@ -23,7 +23,7 @@ export default function FeaturedOffers() {
   if (offers.length === 0) return null;
 
   return (
-  <div className="w-full max-w-5xl mx-auto mb-8">
+    <div className="w-full max-w-5xl mx-auto mb-8">
       <h2 className="text-2xl font-bold mb-4">Special Offers</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {offers.map(offer => (

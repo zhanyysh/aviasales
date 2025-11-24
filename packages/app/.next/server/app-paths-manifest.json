@@ -1,4 +1,7 @@
 {
-  "/not-found": "app/not-found.js",
-  "/manager/page": "app/manager/page.js"
+  "/admin/users/page": "app/admin/users/page.js",
+  "/login/page": "app/login/page.js",
+  "/admin/airlines/page": "app/admin/airlines/page.js",
+  "/admin/content/page": "app/admin/content/page.js",
+  "/admin/statistics/page": "app/admin/statistics/page.js"
 }

@@ -9,7 +9,7 @@ export default function FlightTable() {
 
   useEffect(() => {
     // Получаем ближайшие вылеты (например, 10 следующих рейсов)
-  fetch('https://aviasales-api-xi.vercel.app/api/flights/upcoming')
+    fetch('http://localhost:3001/api/flights/upcoming')
       .then(res => res.ok ? res.json() : Promise.reject(res))
       .then(data => {
         setFlights(data);
@@ -26,9 +26,9 @@ export default function FlightTable() {
   if (flights.length === 0) return <p>Нет вылетов на сегодня.</p>;
 
   return (
-  <div className="w-full max-w-5xl mx-auto mt-8">
+    <div className="w-full max-w-5xl mx-auto mt-8">
       <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-  <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">Таблица ближайших рейс</h2>
+        <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">Таблица ближайших рейс</h2>
         <div className="overflow-x-auto">
           <table className="w-full table-auto border-separate border-spacing-y-2">
             <thead>

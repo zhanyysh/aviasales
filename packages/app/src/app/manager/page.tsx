@@ -1,5 +1,5 @@
 "use client";
-const API_URL = 'https://aviasales-api-xi.vercel.app';
+const API_URL = 'http://localhost:3001';
 import { useEffect, useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 
@@ -117,8 +117,8 @@ export default function ManagerPanel() {
         total_seats: '',
         stops: '',
       });
-  // обновить статистику сразу после добавления рейса
-  await fetchStats();
+      // обновить статистику сразу после добавления рейса
+      await fetchStats();
     } catch (err: any) {
       setCreateFlightError(err.message);
     } finally {

@@ -5,6 +5,8 @@ import { useSearchParams } from 'next/navigation';
 import { notFound } from 'next/navigation';
 import { Flight } from '../../../types';
 
+const BASE_URL = "http://localhost:3001/api/";
+
 export default function FlightDetailPage({ params }: { params: { id: string } }) {
   const searchParams = useSearchParams();
   const offerId = searchParams.get('offerId');
@@ -19,14 +21,14 @@ export default function FlightDetailPage({ params }: { params: { id: string } })
       window.location.href = '/login';
       return;
     }
-  fetch(`https://aviasales-api-xi.vercel.app/api/flights/${params.id}`)
+    fetch(`${BASE_URL}flights/${params.id}`)
       .then(res => res.ok ? res.json() : null)
       .then(data => {
         setFlight(data);
         setLoading(false);
       });
     // Получаем предложение по id рейса
-  fetch(`https://aviasales-api-xi.vercel.app/api/featured_offers?flight_id=${params.id}`)
+    fetch(`${BASE_URL}featured_offers?flight_id=${params.id}`)
       .then(res => res.ok ? res.json() : null)
       .then(data => {
         if (data && data.discount_price) setOffer({ discount_price: data.discount_price });
@@ -58,7 +60,7 @@ export default function FlightDetailPage({ params }: { params: { id: string } })
     }
     const passenger_details = { fullName: JSON.parse(user).full_name || 'Passenger' };
     try {
-  const res = await fetch('https://aviasales-api-xi.vercel.app/api/bookings', {
+      const res = await fetch(`${BASE_URL}bookings`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

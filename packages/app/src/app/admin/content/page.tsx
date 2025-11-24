@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+const BASE_URL = "http://localhost:3001/api/";
+
 interface Airline {
   id: number;
   name: string;
@@ -41,7 +43,7 @@ export default function AdminContent() {
 
   const fetchBanners = () => {
     setLoading(true);
-  fetch("https://aviasales-api-xi.vercel.app/api/banners")
+    fetch("http://localhost:3001/api/banners")
       .then(res => res.json())
       .then(data => {
         setBanners(data);
@@ -54,7 +56,7 @@ export default function AdminContent() {
   };
 
   const fetchOffers = () => {
-  fetch("https://aviasales-api-xi.vercel.app/api/featured_offers")
+    fetch("http://localhost:3001/api/featured_offers")
       .then(res => res.json())
       .then(data => setOffers(Array.isArray(data) ? data : []));
   };
@@ -62,28 +64,28 @@ export default function AdminContent() {
   useEffect(() => {
     fetchBanners();
     fetchOffers();
-  fetch("https://aviasales-api-xi.vercel.app/api/airlines")
+    fetch("http://localhost:3001/api/airlines")
       .then(res => res.json())
       .then(data => setAirlines(Array.isArray(data) ? data : []));
-  fetch("https://aviasales-api-xi.vercel.app/api/flights/all")
+    fetch("http://localhost:3001/api/flights/all")
       .then(res => res.json())
       .then(data => setFlights(Array.isArray(data) ? data.map(f => ({ id: f.id, flight_number: f.flight_number })) : []));
   }, []);
   const handleOfferActivate = async (id: number) => {
     setActionId(id);
-  await fetch(`https://aviasales-api-xi.vercel.app/api/featured_offers/${id}/activate`, { method: "POST" });
+    await fetch(`http://localhost:3001/api/featured_offers/${id}/activate`, { method: "POST" });
     fetchOffers();
     setActionId(null);
   };
   const handleOfferDeactivate = async (id: number) => {
     setActionId(id);
-  await fetch(`https://aviasales-api-xi.vercel.app/api/featured_offers/${id}/deactivate`, { method: "POST" });
+    await fetch(`http://localhost:3001/api/featured_offers/${id}/deactivate`, { method: "POST" });
     fetchOffers();
     setActionId(null);
   };
   const handleOfferDelete = async (id: number) => {
     setActionId(id);
-  await fetch(`https://aviasales-api-xi.vercel.app/api/featured_offers/${id}`, { method: "DELETE" });
+    await fetch(`http://localhost:3001/api/featured_offers/${id}`, { method: "DELETE" });
     fetchOffers();
     setActionId(null);
   };
@@ -106,7 +108,7 @@ export default function AdminContent() {
   const handleOfferEditSave = async () => {
     if (!editOffer) return;
     setActionId(editOffer.id);
-  await fetch(`https://aviasales-api-xi.vercel.app/api/featured_offers/${editOffer.id}`, {
+    await fetch(`http://localhost:3001/api/featured_offers/${editOffer.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(offerForm)
@@ -118,19 +120,19 @@ export default function AdminContent() {
 
   const handleActivate = async (id: number) => {
     setActionId(id);
-  await fetch(`https://aviasales-api-xi.vercel.app/api/banners/${id}/activate`, { method: "POST" });
+    await fetch(`http://localhost:3001/api/banners/${id}/activate`, { method: "POST" });
     fetchBanners();
     setActionId(null);
   };
   const handleDeactivate = async (id: number) => {
     setActionId(id);
-  await fetch(`https://aviasales-api-xi.vercel.app/api/banners/${id}/deactivate`, { method: "POST" });
+    await fetch(`http://localhost:3001/api/banners/${id}/deactivate`, { method: "POST" });
     fetchBanners();
     setActionId(null);
   };
   const handleDelete = async (id: number) => {
     setActionId(id);
-  await fetch(`https://aviasales-api-xi.vercel.app/api/banners/${id}`, { method: "DELETE" });
+    await fetch(`http://localhost:3001/api/banners/${id}`, { method: "DELETE" });
     fetchBanners();
     setActionId(null);
   };
@@ -148,7 +150,7 @@ export default function AdminContent() {
   const handleEditSave = async () => {
     if (!editBanner) return;
     setActionId(editBanner.id);
-  await fetch(`https://aviasales-api-xi.vercel.app/api/banners/${editBanner.id}`, {
+    await fetch(`http://localhost:3001/api/banners/${editBanner.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(editForm)
@@ -178,14 +180,14 @@ export default function AdminContent() {
         if (form.image.files[0]) {
           formData.append('image', form.image.files[0]);
         }
-  await fetch('https://aviasales-api-xi.vercel.app/api/banners', {
+        await fetch('http://localhost:3001/api/banners', {
           method: 'POST',
           body: formData
         });
         fetchBanners();
-  form.title.value = '';
-  (form.image as HTMLInputElement).value = '';
-  form.airline_id.value = '';
+        form.title.value = '';
+        (form.image as HTMLInputElement).value = '';
+        form.airline_id.value = '';
       }}>
         <div className="font-bold mb-4 text-lg text-indigo-700">Add Banner</div>
         <label className="block mb-2 text-sm font-medium text-gray-700">Title
@@ -204,7 +206,7 @@ export default function AdminContent() {
         </label>
         <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition">Add Banner</button>
       </form>
-  <table className="w-full table-auto bg-white rounded-xl shadow-lg mb-8 border border-indigo-100">
+      <table className="w-full table-auto bg-white rounded-xl shadow-lg mb-8 border border-indigo-100">
         <thead>
           <tr className="bg-gray-100">
             <th className="px-4 py-2">Title</th>
@@ -247,7 +249,7 @@ export default function AdminContent() {
 
       <h2 className="text-xl font-bold mt-8 mb-4">Featured Offers</h2>
       {/* Форма добавления спецпредложения */}
-  <form className="mb-8 bg-white rounded-xl shadow-lg p-6 flex flex-col gap-4 border border-indigo-100" onSubmit={async e => {
+      <form className="mb-8 bg-white rounded-xl shadow-lg p-6 flex flex-col gap-4 border border-indigo-100" onSubmit={async e => {
         e.preventDefault();
         const form = e.target as typeof e.target & {
           title: { value: string };
@@ -255,7 +257,7 @@ export default function AdminContent() {
           flight_id: { value: string };
           discount_price: { value: string };
         };
-  await fetch('https://aviasales-api-xi.vercel.app/api/featured_offers', {
+        await fetch('http://localhost:3001/api/featured_offers', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -291,7 +293,7 @@ export default function AdminContent() {
         </label>
         <button type="submit" className="px-4 py-2 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition">Add Offer</button>
       </form>
-  <table className="w-full table-auto bg-white rounded-xl shadow-lg mb-8 border border-indigo-100">
+      <table className="w-full table-auto bg-white rounded-xl shadow-lg mb-8 border border-indigo-100">
         <thead>
           <tr className="bg-gray-100">
             <th className="px-4 py-2">Title</th>

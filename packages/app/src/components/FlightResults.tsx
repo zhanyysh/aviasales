@@ -22,7 +22,7 @@ export default function FlightResults({ flights }: FlightResultsProps) {
         }
         const passenger_details = { fullName: JSON.parse(user).full_name || 'Passenger' };
         try {
-            const res = await fetch('https://aviasales-api-xi.vercel.app/api/bookings', {
+            const res = await fetch('http://localhost:3001/api/bookings', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -49,7 +49,7 @@ export default function FlightResults({ flights }: FlightResultsProps) {
     }
 
     return (
-    <div className="w-full max-w-5xl">
+        <div className="w-full max-w-5xl">
             {flights.map((flight) => (
                 <div key={flight.id} className="bg-white shadow-md rounded-lg p-6 mb-4">
                     <div className="grid grid-cols-3 items-center">

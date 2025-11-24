@@ -1,6 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 
+const BASE_URL = "http://localhost:3001/api/";
+
 interface Airline {
   id: number;
   name: string;
@@ -26,7 +28,7 @@ export default function AdminAirlines() {
   const [showAssign, setShowAssign] = useState<{ [key: number]: boolean }>({});
 
   useEffect(() => {
-  fetch("https://aviasales-api-xi.vercel.app/api/airlines")
+    fetch(`${BASE_URL}airlines`)
       .then(res => res.json())
       .then(data => {
         setAirlines(data);
@@ -37,7 +39,7 @@ export default function AdminAirlines() {
         setLoading(false);
       });
     // Получаем список менеджеров
-  fetch("https://aviasales-api-xi.vercel.app/api/users", {
+    fetch(`${BASE_URL}users`, {
       headers: localStorage.getItem('token') ? { Authorization: `Bearer ${localStorage.getItem('token')}` } : {}
     })
       .then(res => res.json())
@@ -49,7 +51,7 @@ export default function AdminAirlines() {
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
-  const res = await fetch("https://aviasales-api-xi.vercel.app/api/airlines", {
+    const res = await fetch(`${BASE_URL}airlines`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -60,7 +62,7 @@ export default function AdminAirlines() {
     if (res.ok) {
       setName("");
       setIata("");
-  const updated = await fetch("https://aviasales-api-xi.vercel.app/api/airlines").then(r => r.json());
+      const updated = await fetch(`${BASE_URL}airlines`).then(r => r.json());
       setAirlines(updated);
     }
   };
@@ -68,11 +70,11 @@ export default function AdminAirlines() {
   const handleDeactivate = async (id: number) => {
     setActionId(id);
     const token = localStorage.getItem('token');
-  await fetch(`https://aviasales-api-xi.vercel.app/api/airlines/${id}/deactivate`, {
+    await fetch(`${BASE_URL}airlines/${id}/deactivate`, {
       method: "POST",
       headers: token ? { Authorization: `Bearer ${token}` } : {}
     });
-  const updated = await fetch("https://aviasales-api-xi.vercel.app/api/airlines").then(r => r.json());
+    const updated = await fetch(`${BASE_URL}airlines`).then(r => r.json());
     setAirlines(updated);
     setActionId(null);
   };
@@ -80,11 +82,11 @@ export default function AdminAirlines() {
   const handleDelete = async (id: number) => {
     setActionId(id);
     const token = localStorage.getItem('token');
-  await fetch(`https://aviasales-api-xi.vercel.app/api/airlines/${id}`, {
+    await fetch(`${BASE_URL}airlines/${id}`, {
       method: "DELETE",
       headers: token ? { Authorization: `Bearer ${token}` } : {}
     });
-  const updated = await fetch("https://aviasales-api-xi.vercel.app/api/airlines").then(r => r.json());
+    const updated = await fetch(`${BASE_URL}airlines`).then(r => r.json());
     setAirlines(updated);
     setActionId(null);
   };
@@ -154,11 +156,11 @@ export default function AdminAirlines() {
                     onClick={async () => {
                       setActionId(a.id);
                       const token = localStorage.getItem('token');
-                      await fetch(`https://aviasales-api-xi.vercel.app/api/airlines/${a.id}/activate`, {
+                      await fetch(`${BASE_URL}airlines/${a.id}/activate`, {
                         method: "POST",
                         headers: token ? { Authorization: `Bearer ${token}` } : {}
                       });
-                      const updated = await fetch("https://aviasales-api-xi.vercel.app/api/airlines").then(r => r.json());
+                      const updated = await fetch(`${BASE_URL}airlines`).then(r => r.json());
                       setAirlines(updated);
                       setActionId(null);
                     }}
@@ -191,7 +193,7 @@ export default function AdminAirlines() {
                       onClick={async () => {
                         setActionId(a.id);
                         const token = localStorage.getItem('token');
-                        await fetch(`https://aviasales-api-xi.vercel.app/api/airlines/${a.id}/assign-manager`, {
+                        await fetch(`${BASE_URL}airlines/${a.id}/assign-manager`, {
                           method: "POST",
                           headers: {
                             "Content-Type": "application/json",
@@ -199,7 +201,7 @@ export default function AdminAirlines() {
                           },
                           body: JSON.stringify({ manager_id: selectedManager[a.id] })
                         });
-                        const updated = await fetch("https://aviasales-api-xi.vercel.app/api/airlines").then(r => r.json());
+                        const updated = await fetch(`${BASE_URL}airlines`).then(r => r.json());
                         setAirlines(updated);
                         setActionId(null);
                         setShowAssign(prev => ({ ...prev, [a.id]: false }));

@@ -17,18 +17,19 @@ export default function LoginPage() {
     setLoading(true);
     setError(null);
     try {
-  const res = await fetch('https://aviasales-api-xi.vercel.app/api/auth/login', {
+      const res = await fetch('http://localhost:3001/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
       });
       const data = await res.json();
+      console.log(data);
       if (!res.ok) throw new Error(data.message || 'Login failed');
       // Сохраняем токен в localStorage
-  localStorage.setItem('token', data.token);
-  localStorage.setItem('user', JSON.stringify(data.user));
-  setUser(data.user); // обновляем контекст сразу
-  router.push('/');
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      setUser(data.user); // обновляем контекст сразу
+      router.push('/');
     } catch (err) {
       setError((err as Error).message);
     } finally {
